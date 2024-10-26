@@ -1,0 +1,96 @@
+Note:
+
+Result from GPS after displaying device information:
+$GPRMC,,V,,,,,,,,,,N*53 (Recommended minimum specific GPS/Transit data)
+$GPVTG,,,,,,,,,N*30 (Track made good and ground speed)
+$GPGGA,,,,,,0,00,99.99,,,,,,*48 (Global Positioning System Fix Data)
+$GPGSA,A,1,,,,,,,,,,,,,99.99,99.99,99.99*30 (GPS DOP and active satellites)
+(optional sometimes show up) $GPTXT,01,01,01,PMTK inv format*3E
+(optional sometimes show up) $GPGSV,1,1,01,08,,,24*76
+$GPGLL,,,,,,V,N*64 (Geographic position, latitude and longitude (and time))
+
+Explaination:
+
+$GPRMC,210230,A,3855.4487,N,09446.0071,W,0.0,076.2,130495,003.8,E*69
+  
+The sentence contains the following fields:
+
+- The sentence type
+- Current time (if available; UTC)
+- Position status (A for valid, V for invalid)
+- Latitude (in DDMM.MMM format)
+- Latitude compass direction
+- Longitude (in DDDMM.MMM format)
+- Longitude compass direction
+- Speed (in knots per hour)
+- Heading
+- Date (DDMMYY)
+- Magnetic variation
+- Magnetic variation direction
+- The checksum validation value (in hexadecimal)
+
+Track Made Good and Ground Speed.
+
+$GPVTG,360.0,T,348.7,M,000.0,N,000.0,K*43
+
+           054.7,T      True track made good
+           034.4,M      Magnetic track made good
+           005.5,N      Ground speed, knots
+           010.2,K      Ground speed, Kilometers per hour
+           
+	$--VTG,x.x,T,x.x,M,x.x,N,x.x,K
+	x.x,T = Track, degrees True
+	x.x,M = Track, degrees Magnetic
+	x.x,N = Speed, knots
+	x.x,K = Speed, Km/hr
+
+
+$GPGGA,210230,3855.4487,N,09446.0071,W,1,07,1.1,370.5,M,-29.5,M,,*7A
+  
+The sentence contains the following fields:
+
+- The sentence type
+- Current time (if available; UTC)
+- Latitude (in DDMM.MMM format)
+- Latitude compass direction
+- Longitude (in DDDMM.MMM format)
+- Longitude compass direction
+- Fix type (0 for no fix, 1 for GPS, 2 for DGPS) [we have]
+- Number of satellites used for fix [we have]
+- Horizontal dilution of precision [we have]
+- Altitude above mean sea level 
+- Altitude units (M for meters)
+- Height of mean sea level above WGS-84 earth ellipsoid
+- Units of the above geoid seperation (M for meters)
+- Time since last differential correction (ignored if inactive)
+- Differential station ID (ignored if inactive)
+- The checksum validation value (in hexadecimal) [we have]
+
+$GPGSA,A,3,,,,,,16,18,,22,24,,,3.6,2.1,2.2*3C
+
+1    = Mode:
+       M=Manual, forced to operate in 2D or 3D
+       A=Automatic, 3D/2D
+2    = Mode:
+       1=Fix not available
+       2=2D
+       3=3D
+3-14 = IDs of SVs used in position fix (null for unused fields)
+15   = PDOP
+
+$GPGLL,4916.45,N,12311.12,W,225444,A
+
+           4916.46,N    Latitude 49 deg. 16.45 min. North
+           12311.12,W   Longitude 123 deg. 11.12 min. West
+           225444       Fix taken at 22:54:44 UTC
+           A            Data valid
+
+$--GLL,lll.ll,a,yyyyy.yy,a,hhmmss.ss,A llll.ll = Latitude of position
+
+a = N or S
+yyyyy.yy = Longitude of position
+a = E or W
+hhmmss.ss = UTC of position
+A = status: A = valid data
+16   = HDOP
+17   = VDOP
