@@ -3,17 +3,23 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import NavSatFix
 import serial
-from datetime import datetime                                     
+from datetime import datetime 
 
 class GPS_Node(Node):
     def __init__(self):
         super().__init__('gps_node')
         self.serial_port = serial.Serial('/dev/ttyACM0', baudrate=9600, timeout=0.5)
         #uart = busio.UART(board.TX, board.RX, baudrate=9600, timeout=0.5)
+
+        # Enable SBAS
+        enable_sbas(self.serial_port)
+        
         self.publisher_ = self.create_publisher(NavSatFix, 'gps/fix', 10)
         self.timer = self.create_timer(1.0, self.timer_callback)
 
     def timer_callback(self):
+        # Enable SBAS
+        enable_sbas(self.serial_port)
         lines = []
         for _ in range(5):  # Read up to 5 lines
             try:
@@ -98,6 +104,16 @@ def process_gpgsv(line):
 def process_gpgll(line):
     pass
 
+def enable_sbas(serial_port):
+    """
+    Sends the PMTK command to enable SBAS on the BN-180 GPS module.
+    """
+    SBAS_ENABLE_COMMAND = b"$PMTK313,1*2E\r\n"
+    try:
+        serial_port.write(SBAS_ENABLE_COMMAND)
+        print("SBAS enable command sent.")
+    except Exception as e:
+        print(f"Failed to send SBAS command: {e}")
 
 def main(args=None):
     rclpy.init(args=args)
